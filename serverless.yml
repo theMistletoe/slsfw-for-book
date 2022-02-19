@@ -1,0 +1,77 @@
+service: aws-node-express-api-project
+frameworkVersion: '3'
+
+package:
+  individually: true
+custom:
+  esbuild:
+    bundle: true
+    minify: false
+    sourcemap: true
+    exclude: ['aws-sdk']
+    target: 'node14'
+    define: { 'require.resolve': undefined }
+    platform: 'node'
+    concurrency: 10
+    watch:
+      pattern: ['src/**/*.ts'] # match only typescript files in src directory
+      ignore: ['temp/**/*']
+  todoTableName: 'todos-table-${sls:stage}'
+  dynamodb:
+    stages:
+      - dev
+    start:
+      inMemory: true
+      port: 8000
+      migrate: true
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+          Resource:
+            - Fn::GetAtt: [ TodoTable , Arn ]
+  environment:
+    TODO_TABLE: ${self:custom.todoTableName}
+
+functions:
+  app:
+    handler: src/handler.handler
+    events:
+      - http:
+          method: ANY
+          path: "/"
+          cors: true
+      - http:
+          method: ANY
+          path: "/{any+}"
+          cors: true
+
+plugins:
+  - serverless-esbuild
+  - serverless-dynamodb-local
+  - serverless-offline
+
+resources: # CloudFormation template syntax
+  Resources:
+    TodoTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.todoTableName}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST

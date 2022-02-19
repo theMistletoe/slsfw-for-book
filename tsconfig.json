@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "lib": ["ESNext"],
+    "moduleResolution": "node",
+    "isolatedModules": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "removeComments": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,        /* Enables experimental support for ES7 decorators. */
+    "preserveConstEnums": true,
+    "strictNullChecks": true,
+    "allowJs": true,
+    "sourceMap": true,
+    "target": "ES2020",
+    "outDir": "lib"
+  },
+  "include": ["src/**/*.ts", "serverless.ts"],
+  "exclude": [
+    "node_modules/**/*",
+    ".serverless/**/*",
+    ".webpack/**/*",
+    "_warmup/**/*",
+    ".vscode/**/*"
+  ],
+}
