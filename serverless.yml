@@ -69,9 +69,13 @@ resources: # CloudFormation template syntax
       Properties:
         TableName: ${self:custom.todoTableName}
         AttributeDefinitions:
-          - AttributeName: id
+          - AttributeName: userId
+            AttributeType: S
+          - AttributeName: todoId
             AttributeType: S
         KeySchema:
-          - AttributeName: id
+          - AttributeName: userId
             KeyType: HASH
+          - AttributeName: todoId
+            KeyType: RANGE
         BillingMode: PAY_PER_REQUEST
