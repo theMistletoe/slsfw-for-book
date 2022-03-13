@@ -3,6 +3,9 @@ import express from "express";
 import { DocumentClient } from 'aws-sdk/clients/dynamodb';
 import { v4 as uuidv4 } from 'uuid';
 import bodyParser from 'body-parser';
+import * as sourceMapSupport from "source-map-support";
+
+sourceMapSupport.install();
 
 const app = express();
 const router = express.Router()
