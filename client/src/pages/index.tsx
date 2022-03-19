@@ -1,5 +1,12 @@
 import type { NextPage } from 'next'
 import { useEffect, useState } from 'react'
+import { Amplify } from 'aws-amplify';
+
+import { withAuthenticator } from '@aws-amplify/ui-react';
+import '@aws-amplify/ui-react/styles.css';
+
+import awsExports from './../aws-exports';
+Amplify.configure(awsExports);
 
 type Todo = {
   id: string;
@@ -19,10 +26,12 @@ const Home: NextPage = () => {
   }, []);
 
   return (
-    <ul>
-      {todos.map((todo:Todo) => <li key={todo.id}>{todo.title}</li>)}
-    </ul>
+    <div>
+      <ul>
+        {todos.map((todo:Todo) => <li key={todo.id}>{todo.title}</li>)}
+      </ul>
+    </div>
   )
 }
 
-export default Home
+export default withAuthenticator(Home)
