@@ -4,6 +4,7 @@ import { DocumentClient } from 'aws-sdk/clients/dynamodb';
 import { v4 as uuidv4 } from 'uuid';
 import bodyParser from 'body-parser';
 import * as sourceMapSupport from "source-map-support";
+import cors from 'cors';
 
 sourceMapSupport.install();
 
@@ -12,6 +13,14 @@ const router = express.Router()
 
 router.use(bodyParser.json())
 router.use(bodyParser.urlencoded({ extended: true }))
+
+const allowedOrigins = ['http://localhost:3000', 'https://dev.d6k49hquj3iu6.amplifyapp.com'];
+
+const options: cors.CorsOptions = {
+  origin: allowedOrigins
+};
+
+app.use(cors(options));
 
 const TODO_TABLE = process.env.TODO_TABLE;
 const dynamoDbClient = process.env.IS_OFFLINE ? new DocumentClient({
