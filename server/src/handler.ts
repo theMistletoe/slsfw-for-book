@@ -51,9 +51,7 @@ router.get("/todos", async (req, res, _next) => {
 
   const response = await dynamoDbClient.query(params).promise();
 
-  return res.status(200).json({
-    message: JSON.stringify(response),
-  });
+  return res.status(200).json(response);
 });
 
 router.post("/todos", async (req, res, _next) => {
