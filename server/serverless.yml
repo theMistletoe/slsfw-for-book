@@ -79,3 +79,34 @@ resources: # CloudFormation template syntax
           - AttributeName: todoId
             KeyType: RANGE
         BillingMode: PAY_PER_REQUEST
+
+    TodoCognitoUserPool:
+      Type: AWS::Cognito::UserPool
+      Properties:
+        UserPoolName: Todo
+    TodoCognitoUserPoolClient:
+      Type: AWS::Cognito::UserPoolClient
+      Properties:
+        ClientName: TodoWebApp
+        GenerateSecret: false
+        UserPoolId:
+          Ref: "TodoCognitoUserPool"
+    TodoApiGatewayAuthorizer:
+      Type: AWS::ApiGateway::Authorizer
+      Properties:
+        Name: Todo
+        RestApiId:
+          Ref: ApiGatewayRestApi
+        Type: COGNITO_USER_POOLS
+        ProviderARNs:
+          - Fn::GetAtt: [ TodoCognitoUserPool, Arn ]
+        IdentitySource: method.request.header.Authorization
+  Outputs:
+    TodoCognitoUserPoolId:
+      Description: "Wild Rydes Cognito User Pool ID"
+      Value:
+        Ref: "TodoCognitoUserPool"
+    TodoCognitoUserPoolClientId:
+      Description: "Wild Rydes Cognito User Pool Client ID"
+      Value:
+        Ref: "TodoCognitoUserPoolClient"
