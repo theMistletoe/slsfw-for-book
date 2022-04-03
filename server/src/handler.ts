@@ -14,7 +14,7 @@ const router = express.Router()
 router.use(bodyParser.json())
 router.use(bodyParser.urlencoded({ extended: true }))
 
-const allowedOrigins = ['http://localhost:5000', 'https://add-frontend.dicuq2mudal6x.amplifyapp.com'];
+const allowedOrigins = ['http://localhost:5000', 'https://add-frontend.dicuq2mudal6x.amplifyapp.com', 'https://d2kcglik7yi96o.cloudfront.net'];
 const options: cors.CorsOptions = {
   origin: allowedOrigins
 };
