@@ -1,12 +1,5 @@
 import type { NextPage } from 'next'
 import { useEffect, useState } from 'react'
-import { Amplify } from 'aws-amplify';
-
-import { withAuthenticator } from '@aws-amplify/ui-react';
-import '@aws-amplify/ui-react/styles.css';
-
-import awsExports from './../aws-exports';
-Amplify.configure(awsExports);
 
 type Todo = {
   id: string;
@@ -16,17 +9,36 @@ type Todo = {
 
 const Home: NextPage = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
+  const [todoTitle, setTodoTitle] = useState<string>('');
 
   useEffect(() => {
-    fetch('https://d8frx5ocdj.execute-api.us-east-1.amazonaws.com/dev/todos?userid=john')
+    fetch('http://localhost:3000/dev/todos?userid=john')
     .then((res) => res.json())
     .then((data) => {
+      console.log(data);
       setTodos(data.Items);
     })
   }, []);
 
+  const handleSubmit = () => {
+    fetch('http://localhost:3000/dev/todos', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        "userid": "john", //FIXME 
+        "title": todoTitle,
+        "description": ""
+      })
+    }).then((data) => console.log(data));
+  }
+
   return (
     <div>
+      <h1>Todo</h1>
+      <input type="text" onChange={(e) => setTodoTitle(e.target.value)} />
+      <button onClick={handleSubmit}>submit</button>
       <ul>
         {todos.map((todo:Todo) => <li key={todo.id}>{todo.title}</li>)}
       </ul>
@@ -34,4 +46,5 @@ const Home: NextPage = () => {
   )
 }
 
-export default withAuthenticator(Home)
+export default Home
+
