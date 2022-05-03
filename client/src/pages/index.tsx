@@ -2,7 +2,7 @@ import type { NextPage } from 'next'
 import { useEffect, useState } from 'react'
 
 type Todo = {
-  id: string;
+  todoId: string;
   title: string;
   description: string;
 };
@@ -11,17 +11,21 @@ const Home: NextPage = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [todoTitle, setTodoTitle] = useState<string>('');
 
-  useEffect(() => {
-    fetch('http://localhost:3000/dev/todos?userid=john')
+  const fetchTodos = () => {
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_ENDPOINT_URL}/dev/todos?userid=john`)
     .then((res) => res.json())
     .then((data) => {
       console.log(data);
       setTodos(data.Items);
     })
+  }
+
+  useEffect(() => {
+    fetchTodos();
   }, []);
 
   const handleSubmit = () => {
-    fetch('http://localhost:3000/dev/todos', {
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_ENDPOINT_URL}/dev/todos`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -31,7 +35,11 @@ const Home: NextPage = () => {
         "title": todoTitle,
         "description": ""
       })
-    }).then((data) => console.log(data));
+    }).then((data) => {
+      console.log(data);
+      setTodoTitle('');
+      fetchTodos();
+    });
   }
 
   return (
@@ -40,7 +48,7 @@ const Home: NextPage = () => {
       <input type="text" onChange={(e) => setTodoTitle(e.target.value)} />
       <button onClick={handleSubmit}>submit</button>
       <ul>
-        {todos.map((todo:Todo) => <li key={todo.id}>{todo.title}</li>)}
+        {todos.map((todo:Todo) => <li key={todo.todoId}>{todo.title}</li>)}
       </ul>
     </div>
   )
