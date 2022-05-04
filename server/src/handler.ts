@@ -14,9 +14,9 @@ const router = express.Router()
 router.use(bodyParser.json())
 router.use(bodyParser.urlencoded({ extended: true }))
 
-const allowedOrigins = ['http://localhost:5000', 'https://add-frontend.dicuq2mudal6x.amplifyapp.com', 'https://d2kcglik7yi96o.cloudfront.net'];
+// const allowedOrigins = ['https://d1w2qn0had0skc.cloudfront.net']; // FIXME domain
 const options: cors.CorsOptions = {
-  origin: allowedOrigins
+  origin: "*"
 };
 app.use(cors(options));
 
