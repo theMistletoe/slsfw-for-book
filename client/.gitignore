@@ -59,3 +59,5 @@ amplifytools.xcconfig
 #amplify-do-not-edit-end
 
 .env
+.serverless
+.serverless_nextjs
